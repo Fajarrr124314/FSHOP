@@ -38,4 +38,15 @@ Route::post('/checkout/process-direct-topup', [CheckoutController::class, 'proce
 // Admin Protected Dashboard
 Route::get('/admin', AdminDashboard::class)->middleware(['web', 'admin'])->name('admin.dashboard');
 
+// Session manager for latest order
+Route::get('/checkout/clear-order/{orderId}', function($orderId) {
+    $pendingIds = session('pending_order_ids', []);
+    $pendingIds = array_diff($pendingIds, [$orderId]);
+    session(['pending_order_ids' => $pendingIds]);
+    if (session('latest_order_id') === $orderId) {
+        session()->forget('latest_order_id');
+    }
+    return redirect()->back();
+})->name('checkout.clear-order');
+
 

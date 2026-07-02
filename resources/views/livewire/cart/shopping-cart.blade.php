@@ -46,12 +46,21 @@
             <!-- Cart Items list -->
             <template x-if="$store.cart.items.length > 0">
                 <div class="cart-items-container">
-                    <template x-for="item in $store.cart.items" :key="item.uniqueKey">
-                        <div class="cart-item-row glass-card">
+                    <template x-for="(item, index) in $store.cart.items" :key="item.uniqueKey">
+                        <div class="cart-item-row glass-card" style="display: flex; align-items: center; gap: 0.8rem; padding: 1rem;">
+                            <!-- Selection Checkbox & Serial Number -->
+                            <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+                                <input type="checkbox" 
+                                       :checked="item.selected !== false" 
+                                       @change="item.selected = $event.target.checked; $store.cart.save()" 
+                                       style="width: 16px; height: 16px; accent-color: var(--primary-color); cursor: pointer;">
+                                <span style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); min-width: 15px; text-align: center;" x-text="index + 1"></span>
+                            </div>
+
                             <div class="cart-item-img">
                                 <img :src="item.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=80&q=80'" :alt="item.title">
                             </div>
-                            <div class="cart-item-details">
+                            <div class="cart-item-details" style="flex: 1;">
                                 <h4 class="cart-item-title" x-text="item.title"></h4>
                                 <template x-if="item.package_name">
                                     <div class="cart-item-pkg" x-text="item.package_name"></div>
@@ -87,15 +96,15 @@
         <!-- Footer -->
         <template x-if="$store.cart.items.length > 0">
             <div class="cart-drawer-footer">
-                <div class="cart-total-row">
-                    <span style="color: var(--text-secondary); font-weight: 600;">Total Belanja:</span>
+                <div class="cart-total-row" style="margin-bottom: 1.2rem;">
+                    <span style="color: var(--text-secondary); font-weight: 600;">Total Belanja (Item Terpilih):</span>
                     <span class="cart-total-price" x-text="$store.cart.formatMoney($store.cart.total)"></span>
                 </div>
                 
                 <button class="btn btn-primary cart-checkout-btn" 
                         style="width: 100%; justify-content: center; padding: 0.9rem;" 
                         @click="$store.cart.processCheckout()" 
-                        :disabled="$store.cart.isCheckoutLoading">
+                        :disabled="$store.cart.isCheckoutLoading || $store.cart.items.filter(i => i.selected !== false).length === 0">
                     <span x-show="!$store.cart.isCheckoutLoading"><i class="fa-solid fa-circle-check"></i> LANJUTKAN CHECKOUT</span>
                     <span x-show="$store.cart.isCheckoutLoading" style="display: none;"><i class="fa-solid fa-circle-notch fa-spin"></i> MEMPROSES...</span>
                 </button>

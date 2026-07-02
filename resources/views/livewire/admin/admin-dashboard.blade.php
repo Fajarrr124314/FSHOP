@@ -1,35 +1,67 @@
 <div class="admin-dashboard-wrapper" style="padding: 6rem 2rem 4rem; min-height: 90vh;">
-    <div class="section-container" style="max-width: 1200px; margin: 0 auto;">
+    <div class="admin-layout" style="display: flex; gap: 2rem; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
         
-        <!-- Header banner -->
-        <div class="section-header text-center" style="margin-bottom: 3rem;">
-            <div class="gaming-badge-header">
-                <span class="pulse-dot"></span> SECURE ADMIN SPACE PANEL
+        <!-- Sidebar Kiri Mengambang (Floating Sidebar) -->
+        <aside class="admin-sidebar glass-card" style="width: 280px; padding: 2rem; position: sticky; top: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2rem; z-index: 10;">
+            <div style="text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+                <div class="gaming-badge-header" style="margin-bottom: 0.5rem; justify-content: center; display: inline-flex;">
+                    <span class="pulse-dot"></span> SECURE ADMIN
+                </div>
+                <h3 style="margin: 0; font-family: var(--font-heading); color: var(--text-primary); font-size: 1.25rem;">
+                    FSHOP <span class="neon-text-cyan">PANEL</span>
+                </h3>
             </div>
-            <h2 class="gaming-title">
-                <i class="fa-solid fa-user-gear neon-icon"></i> ADMIN <span class="neon-text-cyan">DASHBOARD</span>
-            </h2>
-            <p class="section-subtitle">Selamat datang, Administrator! Kelola data transaksi pesanan serta catalog layanan digital FSHOP.</p>
-        </div>
+            
+            <nav class="admin-nav" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <button class="admin-sidebar-tab-btn {{ $activeTab === 'orders' ? 'active' : '' }}" 
+                        wire:click="setTab('orders')"
+                        style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
+                    <i class="fa-solid fa-list-check" style="font-size: 1.1rem; width: 20px;"></i> Pesanan Pelanggan
+                </button>
+                <button class="admin-sidebar-tab-btn {{ $activeTab === 'services' ? 'active' : '' }}" 
+                        wire:click="setTab('services')"
+                        style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
+                    <i class="fa-solid fa-laptop-code" style="font-size: 1.1rem; width: 20px;"></i> Layanan Jasa
+                </button>
+                <button class="admin-sidebar-tab-btn {{ $activeTab === 'games' ? 'active' : '' }}" 
+                        wire:click="setTab('games')"
+                        style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
+                    <i class="fa-solid fa-gamepad" style="font-size: 1.1rem; width: 20px;"></i> Game &amp; PPOB
+                </button>
+            </nav>
+            
+            <div style="margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 1.5rem; text-align: center;">
+                <a href="{{ route('home') }}" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.85rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Toko
+                </a>
+            </div>
+        </aside>
 
-        <!-- Dashboard Tabs -->
-        <div class="gaming-tabs" style="margin-bottom: 2rem;">
-            <button class="gaming-tab {{ $activeTab === 'orders' ? 'active' : '' }}" wire:click="setTab('orders')">
-                <i class="fa-solid fa-list-check"></i> Pesanan Pelanggan
-            </button>
-            <button class="gaming-tab {{ $activeTab === 'services' ? 'active' : '' }}" wire:click="setTab('services')">
-                <i class="fa-solid fa-laptop-code"></i> Layanan Jasa
-            </button>
-            <button class="gaming-tab {{ $activeTab === 'games' ? 'active' : '' }}" wire:click="setTab('games')">
-                <i class="fa-solid fa-gamepad"></i> Game &amp; PPOB
-            </button>
-        </div>
+        <!-- Main Content Area -->
+        <main class="admin-main-content" style="flex: 1; display: flex; flex-direction: column; gap: 2rem; width: 100%;">
+            <!-- Header banner -->
+            <div class="glass-card" style="padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 style="margin: 0; font-size: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);">
+                        <i class="fa-solid fa-user-gear text-cyan"></i> ADMIN <span class="neon-text-cyan">DASHBOARD</span>
+                    </h2>
+                    <p style="margin: 0.2rem 0 0; font-size: 0.85rem; color: var(--text-secondary);">Kelola data transaksi pesanan serta katalog FSHOP.</p>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 8px;">
+                    Role: <span style="color: var(--primary-color); font-weight: bold;">Administrator</span>
+                </div>
+            </div>
 
         <!-- Tab 1: Orders log -->
         @if($activeTab === 'orders')
             <div class="glass-card" style="padding: 2rem; overflow-x: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h3 style="margin: 0; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-receipt text-cyan"></i> Daftar Transaksi Invoices</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                        <h3 style="margin: 0; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-receipt text-cyan"></i> Daftar Transaksi Invoices</h3>
+                        <button wire:click="checkDokuPayments" class="btn" style="background: #e74c3c; color: white; padding: 0.5rem 1.2rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s;" onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'">
+                            <i class="fa-solid fa-arrows-rotate"></i> Cek Status Pembayaran
+                        </button>
+                    </div>
                     @if(session()->has('order_success'))
                         <div style="background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem;">
                             {{ session('order_success') }}
@@ -86,7 +118,7 @@
                                             </div>
                                         @endforeach
                                     </td>
-                                    <td class="text-bold" style="color: #ffffff;">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                    <td class="text-bold" style="color: var(--text-primary);">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     <td>
                                         <span class="badge-role {{ $order->payment_method === 'doku' ? 'badge-admin' : 'badge-customer' }}">
                                             {{ strtoupper($order->payment_method) }}
@@ -116,7 +148,7 @@
                 
                 <!-- Add Service Form -->
                 <div class="glass-card" style="padding: 2rem;">
-                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-plus text-cyan"></i> Tambah Layanan Jasa Baru</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-plus text-cyan"></i> {{ $isEditingService ? 'Edit Layanan Jasa' : 'Tambah Layanan Jasa Baru' }}</h3>
                     
                     @if(session()->has('service_success'))
                         <div style="background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;">
@@ -124,10 +156,10 @@
                         </div>
                     @endif
 
-                    <form wire:submit.prevent="addService" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <form wire:submit.prevent="{{ $isEditingService ? 'updateService' : 'addService' }}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="form-group">
                             <label class="form-label">ID Slug Unik (e.g. <code>custom-saas</code>)</label>
-                            <input type="text" class="form-input" wire:model="s_id" required placeholder="Slug huruf kecil & tanda hubung">
+                            <input type="text" class="form-input" wire:model="s_id" required placeholder="Slug huruf kecil & tanda hubung" {{ $isEditingService ? 'disabled' : '' }}>
                             @error('s_id') <span style="color: #e74c3c; font-size: 0.75rem;">{{ $message }}</span> @enderror
                         </div>
 
@@ -146,10 +178,18 @@
                             @error('s_title') <span style="color: #e74c3c; font-size: 0.75rem;">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label">URL Gambar Unsplash</label>
-                            <input type="text" class="form-input" wire:model="s_image" required placeholder="https://images.unsplash.com/photo-xxxx">
-                            @error('s_image') <span style="color: #e74c3c; font-size: 0.75rem;">{{ $message }}</span> @enderror
+                        <div class="form-group" style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.15);">
+                            <div>
+                                <label class="form-label">Upload Gambar Baru (Custom)</label>
+                                <input type="file" class="form-input" wire:model="s_image_file" accept="image/*" style="padding: 0.4rem;">
+                                <div wire:loading wire:target="s_image_file" style="color: var(--primary-color); font-size: 0.8rem; margin-top: 0.2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Mengunggah file...</div>
+                                @error('s_image_file') <span style="color: #e74c3c; font-size: 0.75rem; display: block;">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="form-label">Atau URL Gambar Banner</label>
+                                <input type="text" class="form-input" wire:model="s_image" placeholder="URL Gambar Unsplash" :disabled="$s_image_file ? true : false">
+                                @error('s_image') <span style="color: #e74c3c; font-size: 0.75rem; display: block;">{{ $message }}</span> @enderror
+                            </div>
                         </div>
 
                         <div class="form-group" style="grid-column: span 2;">
@@ -172,17 +212,22 @@
                             <textarea class="form-textarea" rows="3" wire:model="s_features" placeholder="Fitur keunggulan 1&#10;Fitur keunggulan 2&#10;Fitur keunggulan 3"></textarea>
                         </div>
 
-                        <div style="grid-column: span 2; margin-top: 1rem;">
+                        <div style="grid-column: span 2; margin-top: 1rem; display: flex; gap: 1rem;">
                             <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">
-                                <i class="fa-solid fa-circle-check"></i> Tambah Layanan Jasa
+                                <i class="fa-solid fa-circle-check"></i> {{ $isEditingService ? 'Simpan Perubahan' : 'Tambah Layanan Jasa' }}
                             </button>
+                            @if($isEditingService)
+                                <button type="button" class="btn btn-outline" wire:click="cancelEditService" style="padding: 0.8rem 2rem;">
+                                    Batal
+                                </button>
+                            @endif
                         </div>
                     </form>
                 </div>
 
                 <!-- Existing Services List -->
                 <div class="glass-card" style="padding: 2rem;">
-                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-layer-group text-cyan"></i> Daftar Layanan Aktif</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-layer-group text-cyan"></i> Daftar Layanan Aktif</h3>
                     
                     <table class="admin-table">
                         <thead>
@@ -198,14 +243,19 @@
                             @foreach($services as $srv)
                                 <tr>
                                     <td><span class="badge-role badge-customer">{{ strtoupper($srv->category) }}</span></td>
-                                    <td class="text-bold" style="color: #ffffff;">{{ $srv->title }}</td>
+                                    <td class="text-bold" style="color: var(--text-primary);">{{ $srv->title }}</td>
                                     <td style="color: var(--accent-color);">{{ $srv->price }}</td>
                                     <td style="font-size: 0.8rem;">
                                         @foreach($srv->tags as $tag)
                                             <span style="background: rgba(255,255,255,0.06); padding: 0.15rem 0.4rem; border-radius: 4px; margin-right: 0.2rem;">{{ $tag }}</span>
                                         @endforeach
                                     </td>
-                                    <td>
+                                    <td style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <!-- Edit button -->
+                                        <button class="theme-toggle" wire:click="editService('{{ $srv->id }}')" title="Edit Layanan" style="border-radius: var(--radius-sm); border-color: var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-primary); cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <!-- Delete button -->
                                         <button class="btn-delete-row" wire:click="deleteService('{{ $srv->id }}')" onclick="return confirm('Hapus layanan {{ $srv->title }}?')" title="Hapus Layanan">
                                             <i class="fa-regular fa-trash-can"></i>
                                         </button>
@@ -225,7 +275,7 @@
                 
                 <!-- Add Game Form -->
                 <div class="glass-card" style="padding: 2rem; height: fit-content;">
-                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-plus text-cyan"></i> Tambah Produk Game / PPOB</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-plus text-cyan"></i> {{ $isEditingGame ? 'Edit Produk Game / PPOB' : 'Tambah Produk Game / PPOB' }}</h3>
                     
                     @if(session()->has('game_success'))
                         <div style="background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;">
@@ -293,7 +343,7 @@
 
                 <!-- Add Package Nominal Form -->
                 <div class="glass-card" style="padding: 2rem; height: fit-content;">
-                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-gem text-cyan"></i> Tambah Nominal / Paket Harga</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-gem text-cyan"></i> Tambah Nominal / Paket Harga</h3>
                     
                     @if(session()->has('pkg_success'))
                         <div style="background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem;">
@@ -342,25 +392,32 @@
 
                 <!-- Existing Games list with Packages list -->
                 <div class="glass-card" style="grid-column: span 2; padding: 2rem;">
-                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: #ffffff;"><i class="fa-solid fa-gamepad text-cyan"></i> Katalog Game &amp; Paket Nominal Aktif</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-gamepad text-cyan"></i> Katalog Game &amp; Paket Nominal Aktif</h3>
                     
                     @foreach($games as $gm)
                         <div class="game-management-section glass-card" style="margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(0,0,0,0.15); border-color: rgba(255,255,255,0.06);">
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem; margin-bottom: 0.8rem;">
                                 <div>
-                                    <h4 style="margin: 0; font-size: 1.15rem; color: #ffffff;">{{ $gm->title }} <span style="font-weight: normal; font-size: 0.8rem; color: var(--text-secondary);">by {{ $gm->publisher }}</span></h4>
+                                    <h4 style="margin: 0; font-size: 1.15rem; color: var(--text-primary);">{{ $gm->title }} <span style="font-weight: normal; font-size: 0.8rem; color: var(--text-secondary);">by {{ $gm->publisher }}</span></h4>
                                     <span class="badge-role badge-customer" style="font-size: 0.65rem;">{{ strtoupper($gm->category) }}</span>
                                 </div>
-                                <button class="btn btn-outline btn-sm" wire:click="deleteGame('{{ $gm->id }}')" onclick="return confirm('Hapus game {{ $gm->title }} dan seluruh paket nominalnya?')" style="border-color: rgba(231, 76, 60, 0.4); color: #e74c3c;">
-                                    <i class="fa-regular fa-trash-can"></i> Hapus Game
-                                </button>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <!-- Edit Game button -->
+                                    <button class="btn btn-outline btn-sm" wire:click="editGame('{{ $gm->id }}')" style="border-color: var(--border-color); color: var(--text-primary); cursor: pointer;">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </button>
+                                    <!-- Delete Game button -->
+                                    <button class="btn btn-outline btn-sm" wire:click="deleteGame('{{ $gm->id }}')" onclick="return confirm('Hapus game {{ $gm->title }} dan seluruh paket nominalnya?')" style="border-color: rgba(231, 76, 60, 0.4); color: #e74c3c; cursor: pointer;">
+                                        <i class="fa-regular fa-trash-can"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
 
                             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem;">
                                 @forelse($gm->packages as $pkg)
                                     <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 0.6rem 0.8rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
                                         <div>
-                                            <div style="font-size: 0.8rem; font-weight: bold; color: #ffffff;">{{ $pkg->name }}</div>
+                                            <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-primary);">{{ $pkg->name }}</div>
                                             <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: bold;">{{ $pkg->price }}</div>
                                         </div>
                                         <button wire:click="deletePackage('{{ $pkg->id }}')" onclick="return confirm('Hapus nominal {{ $pkg->name }}?')" style="background: none; border: none; color: #e74c3c; cursor: pointer; opacity: 0.7; font-size: 0.95rem;">
@@ -377,6 +434,6 @@
 
             </div>
         @endif
-
+        </main>
     </div>
 </div>

@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class CheckoutController extends Controller
 {
     /**
-     * Render the simulated DOKU Payment page.
+     * Redirect to the official DOKU Payment page.
      */
     public function pay($orderId)
     {
@@ -20,20 +20,21 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.success', ['orderId' => $order->id]);
         }
 
-        // Generate Doku Payment Session URL and redirect away
+        // Generate official DOKU Payment page URL and redirect (cached for 1 hour to prevent regeneration)
         try {
             $doku = new DokuService();
-            $payUrl = $doku->getCheckoutUrl($order);
+            $payUrl = \Illuminate\Support\Facades\Cache::remember("order_doku_url_{$order->id}", 3600, function() use ($doku, $order) {
+                return $doku->getCheckoutUrl($order);
+            });
 
-            // If it returned a real Doku checkout session URL, redirect immediately
-            if ($payUrl && (str_contains($payUrl, 'doku.com') || str_contains($payUrl, 'sandbox.doku'))) {
+            if ($payUrl) {
                 return redirect()->away($payUrl);
             }
         } catch (\Exception $e) {
             \Log::error('Doku Pay page API error: ' . $e->getMessage());
         }
 
-        return view('checkout.doku_mock', compact('order'));
+        return redirect()->route('home')->with('error', 'Gagal terhubung ke DOKU Gateway.');
     }
 
     /**
@@ -42,27 +43,75 @@ class CheckoutController extends Controller
     public function success($orderId)
     {
         $order = Order::findOrFail($orderId);
-        return view('checkout.success', compact('order'));
+        $pendingIds = session('pending_order_ids', []);
+        if (!in_array($order->id, $pendingIds)) {
+            $pendingIds[] = $order->id;
+            session(['pending_order_ids' => $pendingIds]);
+        }
+        session(['latest_order_id' => $order->id]);
+        return redirect()->route('home');
     }
 
     /**
-     * Handle webhook simulation / notifications.
+     * Handle official webhook notifications from DOKU.
      */
     public function webhook(Request $request)
     {
-        // Simple notification validator (DOKU webhook payload mock)
-        $invoiceNumber = $request->input('order.invoice_number') ?? $request->input('invoice_number');
-        $status = $request->input('transaction.status') ?? $request->input('status');
+        $clientId = $request->header('Client-Id');
+        $requestId = $request->header('Request-Id');
+        $requestTimestamp = $request->header('Request-Timestamp');
+        $receivedSignature = $request->header('Signature');
+        $bypassSignature = env('DOKU_BYPASS_SIGNATURE', false);
 
-        if ($invoiceNumber) {
-            $order = Order::find($invoiceNumber);
-            if ($order && ($status === 'SUCCESS' || $status === 'paid')) {
-                $order->update(['payment_status' => 'paid']);
-                return response()->json(['message' => 'Payment recorded successfully'], 200);
+        // Fallback: If Doku headers are missing, treat as simulated mock client checkout
+        if ($bypassSignature || !$clientId || !$receivedSignature) {
+            $invoiceNumber = $request->input('order.invoice_number') ?? $request->input('invoice_number');
+            $status = $request->input('transaction.status') ?? $request->input('status');
+
+            if ($invoiceNumber) {
+                $order = Order::find($invoiceNumber);
+                if ($order && (strtoupper($status) === 'SUCCESS' || $status === 'paid')) {
+                    $order->update(['payment_status' => 'paid']);
+                    return response()->json(['message' => 'Payment recorded successfully (Simulation)'], 200);
+                }
             }
+            return response()->json(['message' => 'Order not found or invalid status (Simulation)'], 400);
+        }
+        
+        $requestBody = $request->getContent();
+        $secretKey = env('DOKU_SECRET_KEY');
+        
+        $digest = base64_encode(hash('sha256', $requestBody, true));
+        $targetPath = $request->getPathInfo(); // e.g. /checkout/doku-webhook
+        
+        $signatureComponent = "Client-Id:" . $clientId . "\n" .
+                             "Request-Id:" . $requestId . "\n" .
+                             "Request-Timestamp:" . $requestTimestamp . "\n" .
+                             "Request-Target:" . $targetPath . "\n" .
+                             "Digest:" . $digest;
+                             
+        $computedSignature = 'HMACSHA256=' . base64_encode(hash_hmac('sha256', $signatureComponent, $secretKey, true));
+
+        if (hash_equals($computedSignature, (string)$receivedSignature)) {
+            $invoiceNumber = $request->input('order.invoice_number') ?? $request->input('invoice_number');
+            $status = $request->input('transaction.status') ?? $request->input('status');
+
+            if ($invoiceNumber) {
+                $order = Order::find($invoiceNumber);
+                if ($order && (strtoupper($status) === 'SUCCESS' || $status === 'paid')) {
+                    $order->update(['payment_status' => 'paid']);
+                    return response()->json(['message' => 'Payment recorded successfully'], 200);
+                }
+            }
+            return response()->json(['message' => 'Order not found or invalid status'], 400);
         }
 
-        return response()->json(['message' => 'Invalid transaction data'], 400);
+        \Log::warning('DOKU Webhook signature mismatch', [
+            'received' => $receivedSignature,
+            'computed' => $computedSignature
+        ]);
+
+        return response()->json(['message' => 'Invalid webhook signature'], 401);
     }
 
     /**
@@ -82,15 +131,15 @@ class CheckoutController extends Controller
 
         $orderId = 'FSHOP-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
-        // Read customer details from cart items if present
+        // Read customer details from request or cart items
         $customerName = auth()->check() ? auth()->user()->name : 'Guest Customer';
-        $customerPhone = '0895806317711'; // fallback
+        $customerPhone = $request->input('customer_phone') ?: '0895806317711';
 
         foreach ($items as $item) {
             if (!empty($item['customer_name'])) {
                 $customerName = $item['customer_name'];
             }
-            if (!empty($item['customer_phone'])) {
+            if (!empty($item['customer_phone']) && empty($request->input('customer_phone'))) {
                 $customerPhone = $item['customer_phone'];
             }
         }

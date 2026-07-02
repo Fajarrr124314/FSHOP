@@ -105,10 +105,10 @@
             <div class="desktop-auth">
                 @auth
                     <div class="nav-dropdown" style="position: relative; margin-left: 0.3rem;">
-                        <button class="nav-dropdown-trigger nav-link" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 30px; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); cursor: pointer; text-transform: none; font-size: 0.85rem; height: 38px;">
+                        <button class="nav-dropdown-trigger nav-link" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 30px; padding: 0.3rem 0.8rem; background: rgba(var(--primary-rgb), 0.05); border: 1px solid var(--border-color); cursor: pointer; text-transform: none; font-size: 0.85rem; height: 38px;">
                             <img src="{{ auth()->user()->avatar ?: 'https://www.gravatar.com/avatar/' . md5(auth()->user()->email) . '?d=mp' }}" alt="User profile" style="width: 24px; height: 24px; border-radius: 50%;">
-                            <span style="color: #ffffff; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600;">{{ explode(' ', auth()->user()->name)[0] }}</span>
-                            <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem; opacity: 0.7;"></i>
+                            <span style="color: var(--text-primary); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600;">{{ explode(' ', auth()->user()->name)[0] }}</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.65rem; opacity: 0.7; color: var(--text-primary);"></i>
                         </button>
                         <div class="nav-dropdown-menu glass-card" style="right: 0; left: auto; min-width: 180px; top: 110%;">
                             @if(auth()->user()->isAdmin())

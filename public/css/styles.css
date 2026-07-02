@@ -2978,7 +2978,7 @@ body.light-mode .dropdown-item:hover {
     padding: 1rem;
     border-bottom: 2px solid var(--border-color);
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary);
     font-family: var(--font-heading);
 }
 
@@ -3056,9 +3056,6 @@ body.light-mode .dropdown-item:hover {
         padding: 1.5rem !important;
     }
     
-    .desktop-auth {
-        display: none !important;
-    }
     .mobile-auth-actions {
         display: flex !important;
         flex-direction: column;
@@ -3069,4 +3066,79 @@ body.light-mode .dropdown-item:hover {
         padding-top: 1.5rem;
     }
 }
+
+/* Admin Floating Sidebar Styles */
+.admin-sidebar-tab-btn {
+    transition: var(--transition-fast) !important;
+}
+
+.admin-sidebar-tab-btn:hover {
+    color: var(--primary-color) !important;
+    background: rgba(var(--primary-rgb), 0.05) !important;
+    border-color: rgba(var(--primary-rgb), 0.15) !important;
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.05);
+}
+
+.admin-sidebar-tab-btn.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--primary-color), rgba(var(--primary-rgb), 0.6)) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+}
+
+@media (max-width: 992px) {
+    .admin-layout {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .admin-sidebar {
+        width: 100% !important;
+        position: relative !important;
+        top: 0 !important;
+        margin-top: 1rem;
+    }
+    .admin-nav {
+        flex-direction: row !important;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        gap: 0.5rem !important;
+    }
+    .admin-sidebar-tab-btn {
+        flex-shrink: 0;
+        width: auto !important;
+        padding: 0.7rem 1.1rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-dashboard-wrapper {
+        padding: 5.5rem 1rem 2rem !important;
+    }
+}
+
+/* Light Mode Overrides for Admin Table and Sections */
+body.light-mode .admin-table th {
+    background: rgba(0, 0, 0, 0.03) !important;
+    color: var(--text-primary) !important;
+}
+
+body.light-mode .admin-table tr:hover {
+    background: rgba(0, 0, 0, 0.01) !important;
+}
+
+body.light-mode .game-management-section {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.light-mode .admin-sidebar h3 {
+    color: var(--text-primary) !important;
+}
+
+body.light-mode .admin-main-content h2,
+body.light-mode .admin-main-content h3,
+body.light-mode .admin-main-content h4 {
+    color: var(--text-primary) !important;
+}
+
 

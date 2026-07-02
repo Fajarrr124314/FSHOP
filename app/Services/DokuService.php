@@ -26,11 +26,11 @@ class DokuService
     /**
      * Generate checkout URL for the order.
      */
-    public function getCheckoutUrl(Order $order): string
+    public function getCheckoutUrl(Order $order): ?string
     {
-        // If DOKU is not configured, redirect to our local high-fidelity simulated checkout screen.
+        // If DOKU is not configured, return null
         if (empty($this->clientId) || empty($this->secretKey)) {
-            return route('checkout.pay', ['orderId' => $order->id]);
+            return null;
         }
 
         try {
@@ -66,6 +66,9 @@ class DokuService
                     'callback_url' => route('checkout.success', ['orderId' => $order->id]),
                     'auto_redirect' => true,
                 ],
+                'payment' => [
+                    'payment_due_date' => 60
+                ],
                 'customer' => [
                     'name' => $order->customer_name,
                     'phone' => $phone,
@@ -73,7 +76,8 @@ class DokuService
                 ]
             ];
 
-            $signature = $this->generateSignature($requestId, $dateTime, $targetPath, $payload);
+            $jsonPayload = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $signature = $this->generateSignature($requestId, $dateTime, $targetPath, $jsonPayload);
 
             $response = Http::withHeaders([
                 'Client-Id' => $this->clientId,
@@ -81,7 +85,7 @@ class DokuService
                 'Request-Timestamp' => $dateTime,
                 'Signature' => 'HMACSHA256=' . $signature,
                 'Content-Type' => 'application/json',
-            ])->post($this->baseUrl . $targetPath, $payload);
+            ])->withBody($jsonPayload, 'application/json')->post($this->baseUrl . $targetPath);
 
             if ($response->successful() && isset($response->json()['response']['payment']['url'])) {
                 // Update DOKU invoice reference
@@ -91,27 +95,82 @@ class DokuService
                 return $response->json()['response']['payment']['url'];
             }
 
-            // Log error and fallback to simulated checkout page if real request fails
-            \Log::error('DOKU API payment token creation failed. Fallback to simulation.', [
+            // Log error
+            \Log::error('DOKU API payment token creation failed.', [
                 'status' => $response->status(),
                 'body' => $response->body()
             ]);
-            return route('checkout.pay', ['orderId' => $order->id]);
+            return null;
 
         } catch (\Exception $e) {
-            \Log::error('DOKU Payment integration exception. Fallback to simulation.', [
+            \Log::error('DOKU Payment integration exception.', [
                 'message' => $e->getMessage()
             ]);
-            return route('checkout.pay', ['orderId' => $order->id]);
+            return null;
+        }
+    }
+
+    /**
+     * Check transaction status from DOKU.
+     */
+    public function checkStatus(string $invoiceNumber): ?string
+    {
+        if (empty($this->clientId) || empty($this->secretKey)) {
+            return null;
+        }
+
+        try {
+            $requestId = (string) Str::uuid();
+            $dateTime = gmdate('Y-m-d\TH:i:s\Z');
+            $targetPath = '/orders/v1/status';
+            
+            $payload = [
+                'order' => [
+                    'invoice_number' => $invoiceNumber
+                ]
+            ];
+
+            $jsonPayload = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $digest = base64_encode(hash('sha256', $jsonPayload, true));
+            
+            $signatureComponent = "Client-Id:" . $this->clientId . "\n" .
+                                 "Request-Id:" . $requestId . "\n" .
+                                 "Request-Timestamp:" . $dateTime . "\n" .
+                                 "Request-Target:" . $targetPath . "\n" .
+                                 "Digest:" . $digest;
+
+            $signature = base64_encode(hash_hmac('sha256', $signatureComponent, $this->secretKey, true));
+
+            $response = Http::withHeaders([
+                'Client-Id' => $this->clientId,
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $dateTime,
+                'Signature' => 'HMACSHA256=' . $signature,
+                'Content-Type' => 'application/json',
+            ])->withBody($jsonPayload, 'application/json')->post($this->baseUrl . $targetPath);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $status = $data['transaction']['status'] ?? $data['order']['status'] ?? null;
+                if ($status) {
+                    return strtoupper($status);
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            \Log::error('DOKU status check exception.', [
+                'message' => $e->getMessage()
+            ]);
+            return null;
         }
     }
 
     /**
      * Generate HMAC-SHA256 signature for DOKU REST API authentication.
      */
-    protected function generateSignature(string $requestId, string $dateTime, string $targetPath, array $payload): string
+    protected function generateSignature(string $requestId, string $dateTime, string $targetPath, string $body): string
     {
-        $body = json_encode($payload);
         $digest = base64_encode(hash('sha256', $body, true));
         
         $signatureComponent = "Client-Id:" . $this->clientId . "\n" .
