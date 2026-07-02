@@ -15,11 +15,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed default admin user
+        User::updateOrCreate(
+            ['email' => 'admin@fshop.space'],
+            [
+                'name' => 'FSHOP Admin',
+                'role' => 'admin',
+                'password' => bcrypt('admin123'), // Fallback password for mock login
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed default customer user
+        User::updateOrCreate(
+            ['email' => 'customer@fshop.space'],
+            [
+                'name' => 'FSHOP Customer',
+                'role' => 'customer',
+                'password' => bcrypt('customer123'),
+            ]
+        );
+
+        $this->call(ShopCatalogSeeder::class);
     }
 }

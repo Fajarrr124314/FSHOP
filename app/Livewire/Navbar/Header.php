@@ -10,6 +10,15 @@ class Header extends Component
     public $isMobileMenuOpen = false;
     public $activeNav = 'home';
 
+    protected $listeners = [
+        'nav-scrolled' => 'onNavScrolled'
+    ];
+
+    public function mount()
+    {
+        //
+    }
+
     #[On('nav-scrolled')]
     public function onNavScrolled($section)
     {
@@ -29,6 +38,18 @@ class Header extends Component
 
     public function render()
     {
+        $routeName = request()->route()?->getName();
+        if ($routeName) {
+            $this->activeNav = match($routeName) {
+                'home' => 'home',
+                'services' => 'services',
+                'topup' => 'topup',
+                'cv-maker' => 'cv-maker',
+                'cover-letter' => 'cover-letter',
+                default => 'home'
+            };
+        }
         return view('livewire.navbar.header');
     }
+
 }

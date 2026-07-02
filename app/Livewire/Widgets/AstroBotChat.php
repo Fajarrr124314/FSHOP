@@ -13,7 +13,7 @@ class AstroBotChat extends Component
     public function mount()
     {
         $this->messages = [
-            ['sender' => 'bot', 'text' => 'Halo 🧑‍🚀 Saya AstroBot asisten virtual FSHOP! Ada yang bisa saya bantu terkait layanan web, mobile, poster, atau tugas?']
+            ['sender' => 'bot', 'text' => 'Halo 🧑‍🚀 Saya AstroBot asisten virtual FSHOP! Ada yang bisa saya bantu terkait layanan web, mobile, poster, atau portofolio?']
         ];
     }
 
@@ -42,8 +42,8 @@ class AstroBotChat extends Component
             return 'Jasa Pembuatan Web FSHOP mulai dari Rp 350.000! Menggunakan framework Laravel / Livewire yang super cepat, SEO friendly, dan tampilan glassmorphic modern.';
         } elseif (str_contains($q, 'poster') || str_contains($q, 'banner') || str_contains($q, 'desain')) {
             return 'Desain Poster & Banner mulai dari Rp 35.000! File HD siap cetak (PDF/PNG/PSD) dengan pengerjaan kilat 1x24 jam.';
-        } elseif (str_contains($q, 'tugas') || str_contains($q, 'coding') || str_contains($q, 'makalah')) {
-            return 'Kami membantu tugas koding (PHP, Python, HTML/CSS, SQL) & penulisan makalah mulai dari Rp 25.000 dengan garansi nilai maksimal dan penjelasan kodingan!';
+        } elseif (str_contains($q, 'portofolio') || str_contains($q, 'karya') || str_contains($q, 'contoh')) {
+            return 'Anda bisa melihat Portofolio Showcase kami langsung di halaman utama (Landing Page) untuk mengintip hasil karya digital terbaik yang telah selesai kami kerjakan!';
         } elseif (str_contains($q, 'cv') || str_contains($q, 'gratis')) {
             return 'Anda bisa menggunakan fitur CV Generator Gratis kami langsung di menu "CV Gratis" pada header atas website ini!';
         } elseif (str_contains($q, 'kontak') || str_contains($q, 'wa') || str_contains($q, 'pesan')) {

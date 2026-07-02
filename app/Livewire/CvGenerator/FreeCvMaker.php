@@ -82,7 +82,7 @@ class FreeCvMaker extends Component
 
     public function render()
     {
-        return view('livewire.cv-generator.free-cv-maker');
+        return view('livewire.cv-generator.free-cv-maker')->layout('components.layouts.app');
     }
 }
 

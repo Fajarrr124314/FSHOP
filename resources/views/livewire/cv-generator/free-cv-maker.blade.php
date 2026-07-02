@@ -118,35 +118,35 @@
                             @enderror
                         </div>
                         <div>
-                            <input type="text" class="form-input" wire:model.live="photoUrl" placeholder="Atau tempel URL Gambar">
+                            <input type="text" class="form-input" wire:model.live.debounce.600ms="photoUrl" placeholder="Atau tempel URL Gambar">
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-input" wire:model.live="fullName" placeholder="Contoh: FAJAR NUR FARRIJAL">
+                    <input type="text" class="form-input" wire:model.live.debounce.600ms="fullName" placeholder="Contoh: FAJAR NUR FARRIJAL">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Profesi / Judul Karir</label>
-                    <input type="text" class="form-input" wire:model.live="jobTitle" placeholder="Contoh: WEB DEVELOPER, UI/UX DESIGNER">
+                    <input type="text" class="form-input" wire:model.live.debounce.600ms="jobTitle" placeholder="Contoh: WEB DEVELOPER, UI/UX DESIGNER">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-input" wire:model.live="email" placeholder="email@domain.com">
+                        <input type="email" class="form-input" wire:model.live.debounce.600ms="email" placeholder="email@domain.com">
                     </div>
                     <div class="form-group">
                         <label class="form-label">No. Telepon / WA</label>
-                        <input type="text" class="form-input" wire:model.live="phone" placeholder="08123456789">
+                        <input type="text" class="form-input" wire:model.live.debounce.600ms="phone" placeholder="08123456789">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Alamat / Lokasi</label>
-                    <input type="text" class="form-input" wire:model.live="address" placeholder="Kota, Provinsi">
+                    <input type="text" class="form-input" wire:model.live.debounce.600ms="address" placeholder="Kota, Provinsi">
                 </div>
 
                 <!-- Tautan & Sosial Media -->
@@ -154,28 +154,28 @@
 
                 <div class="form-group">
                     <label class="form-label">URL Portofolio Web / Blog</label>
-                    <input type="text" class="form-input" wire:model.live="portfolioUrl" placeholder="https://portofolio-anda.com">
+                    <input type="text" class="form-input" wire:model.live.debounce.600ms="portfolioUrl" placeholder="https://portofolio-anda.com">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
                     <div class="form-group">
                         <label class="form-label">LinkedIn</label>
-                        <input type="text" class="form-input" wire:model.live="socialLinkedin" placeholder="linkedin.com/in/username">
+                        <input type="text" class="form-input" wire:model.live.debounce.600ms="socialLinkedin" placeholder="linkedin.com/in/username">
                     </div>
                     <div class="form-group">
                         <label class="form-label">GitHub</label>
-                        <input type="text" class="form-input" wire:model.live="socialGithub" placeholder="github.com/username">
+                        <input type="text" class="form-input" wire:model.live.debounce.600ms="socialGithub" placeholder="github.com/username">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.6rem;">
                     <div class="form-group">
                         <label class="form-label">Instagram</label>
-                        <input type="text" class="form-input" wire:model.live="socialInstagram" placeholder="instagram.com/username">
+                        <input type="text" class="form-input" wire:model.live.debounce.600ms="socialInstagram" placeholder="instagram.com/username">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Facebook</label>
-                        <input type="text" class="form-input" wire:model.live="socialFacebook" placeholder="facebook.com/username">
+                        <input type="text" class="form-input" wire:model.live.debounce.600ms="socialFacebook" placeholder="facebook.com/username">
                     </div>
                 </div>
 
@@ -184,22 +184,22 @@
 
                 <div class="form-group">
                     <label class="form-label">Ringkasan Profil (Tentang Saya)</label>
-                    <textarea class="form-textarea" rows="3" wire:model.live="summary" placeholder="Deskripsikan keahlian dan latar belakang Anda..."></textarea>
+                    <textarea class="form-textarea" rows="3" wire:model.live.debounce.600ms="summary" placeholder="Deskripsikan keahlian dan latar belakang Anda..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Pengalaman Kerja / Proyek</label>
-                    <textarea class="form-textarea" rows="4" wire:model.live="experience" placeholder="IT Support - PT ABC&#10;Deskripsi kerjaan..."></textarea>
+                    <textarea class="form-textarea" rows="4" wire:model.live.debounce.600ms="experience" placeholder="IT Support - PT ABC&#10;Deskripsi kerjaan..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Pendidikan</label>
-                    <textarea class="form-textarea" rows="2" wire:model.live="education" placeholder="S1 Informatika - Universitas XYZ..."></textarea>
+                    <textarea class="form-textarea" rows="2" wire:model.live.debounce.600ms="education" placeholder="S1 Informatika - Universitas XYZ..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Keahlian (Skills - Pisahkan dengan koma)</label>
-                    <input type="text" class="form-input" wire:model.live="skills">
+                    <input type="text" class="form-input" wire:model.live.debounce.600ms="skills">
                 </div>
             </div>
 

@@ -62,6 +62,6 @@ class CoverLetterGenerator extends Component
 
     public function render()
     {
-        return view('livewire.cover-letter.cover-letter-generator');
+        return view('livewire.cover-letter.cover-letter-generator')->layout('components.layouts.app');
     }
 }
