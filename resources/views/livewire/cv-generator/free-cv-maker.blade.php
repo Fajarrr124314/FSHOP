@@ -211,111 +211,134 @@
                     </h3>
                 </div>
 
-                @if($selectedTemplate === 'ats')
-                    <!-- ATS Paper Preview (Matching Screenshot exact design) -->
-                    <div class="cv-paper-preview cv-paper-ats" id="printableCv">
-                        <!-- Header Box: Photo Left, Name Right -->
-                        <div class="ats-header">
-                            <div class="ats-photo-box">
-                                @if($photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto {{ $fullName }}" class="ats-photo">
-                                @else
-                                    <div class="ats-photo-placeholder"><i class="fa-solid fa-user"></i></div>
-                                @endif
-                            </div>
-                            <div class="ats-header-text">
-                                <h1 class="ats-title">{{ strtoupper($fullName ?: 'NAMA LENGKAP') }}</h1>
-                                <p class="ats-subtitle">{{ strtoupper($jobTitle ?: 'PROFESI / JUDUL KARIR') }}</p>
-                            </div>
-                        </div>
-
-                        <!-- Contact Bar with Icons -->
-                        <div class="ats-contact-bar">
-                            <span><i class="fa-solid fa-phone"></i> {{ $phone ?: '08123456789' }}</span>
-                            <span><i class="fa-solid fa-envelope"></i> {{ $email ?: 'email@domain.com' }}</span>
-                            <span><i class="fa-solid fa-location-dot"></i> {{ $address ?: 'Lokasi' }}</span>
-                        </div>
-
-                        <!-- Content Sections -->
-                        <div class="ats-section-title">TENTANG SAYA</div>
-                        <p class="ats-text">{{ $summary }}</p>
-
-                        <div class="ats-section-title">PENGALAMAN</div>
-                        <div class="ats-text" style="white-space: pre-line;">{{ $experience }}</div>
-
-                        <div class="ats-section-title">PENDIDIKAN</div>
-                        <div class="ats-text" style="white-space: pre-line;">{{ $education }}</div>
-
-                        <div class="ats-section-title">KETERAMPILAN</div>
-                        <ul class="ats-skills-list">
-                            @foreach(array_map('trim', explode(',', $skills)) as $skillItem)
-                                @if(!empty($skillItem))
-                                    <li>{{ $skillItem }}</li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                @else
-                    <!-- Creative Paper Preview (Modern 2-Column Visual design) -->
-                    <div class="cv-paper-preview cv-paper-creative theme-{{ $creativeTheme }}" id="printableCv">
-                        <!-- Left Sidebar Column -->
-                        <div class="creative-sidebar">
-                            <div class="creative-photo-container">
-                                @if($photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto {{ $fullName }}" class="creative-photo">
-                                @else
-                                    <div class="creative-photo-placeholder"><i class="fa-solid fa-user"></i></div>
-                                @endif
-                            </div>
-
-                            <div class="creative-sidebar-section">
-                                <h5>KONTAK</h5>
-                                <div class="creative-contact-item"><i class="fa-solid fa-envelope"></i> {{ $email ?: 'email@domain.com' }}</div>
-                                <div class="creative-contact-item"><i class="fa-solid fa-phone"></i> {{ $phone ?: '08123456789' }}</div>
-                                <div class="creative-contact-item"><i class="fa-solid fa-location-dot"></i> {{ $address ?: 'Lokasi' }}</div>
-                            </div>
-
-                            @if($socialLinkedin || $socialGithub || $socialInstagram || $socialFacebook || $portfolioUrl)
-                                <div class="creative-sidebar-section">
-                                    <h5>SOSIAL MEDIA</h5>
-                                    @if($socialLinkedin)<div class="creative-contact-item"><i class="fa-brands fa-linkedin"></i> {{ $socialLinkedin }}</div>@endif
-                                    @if($socialGithub)<div class="creative-contact-item"><i class="fa-brands fa-github"></i> {{ $socialGithub }}</div>@endif
-                                    @if($socialInstagram)<div class="creative-contact-item"><i class="fa-brands fa-instagram"></i> {{ $socialInstagram }}</div>@endif
-                                    @if($socialFacebook)<div class="creative-contact-item"><i class="fa-brands fa-facebook"></i> {{ $socialFacebook }}</div>@endif
-                                    @if($portfolioUrl)<div class="creative-contact-item"><i class="fa-solid fa-globe"></i> {{ $portfolioUrl }}</div>@endif
+                <div class="cv-preview-scroll-wrapper" style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0.5rem 0;">
+                    @if($selectedTemplate === 'ats')
+                        <!-- ATS Paper Preview (Matching Screenshot exact design) -->
+                        <div class="cv-paper-preview cv-paper-ats" id="printableCv">
+                            <!-- Header Box: Photo Left, Name Right -->
+                            <div class="ats-header">
+                                <div class="ats-photo-box">
+                                    @if($photoUrl)
+                                        <img src="{{ $photoUrl }}" alt="Foto {{ $fullName }}" class="ats-photo">
+                                    @else
+                                        <div class="ats-photo-placeholder"><i class="fa-solid fa-user"></i></div>
+                                    @endif
                                 </div>
-                            @endif
+                                <div class="ats-header-text">
+                                    <h1 class="ats-title">{{ strtoupper($fullName ?: 'NAMA LENGKAP') }}</h1>
+                                    <p class="ats-subtitle">{{ strtoupper($jobTitle ?: 'PROFESI / JUDUL KARIR') }}</p>
+                                </div>
+                            </div>
 
-                            <div class="creative-sidebar-section">
-                                <h5>KEAHLIAN</h5>
-                                <div class="creative-skills-badges">
-                                    @foreach(array_map('trim', explode(',', $skills)) as $skillItem)
-                                        @if(!empty($skillItem))
-                                            <span class="creative-skill-badge">{{ $skillItem }}</span>
+                            <!-- Contact Bar with Icons -->
+                            <div class="ats-contact-bar">
+                                <span><i class="fa-solid fa-phone"></i> {{ $phone ?: '08123456789' }}</span>
+                                <span><i class="fa-solid fa-envelope"></i> {{ $email ?: 'email@domain.com' }}</span>
+                                <span><i class="fa-solid fa-location-dot"></i> {{ $address ?: 'Lokasi' }}</span>
+                            </div>
+
+                            <!-- Content Sections -->
+                            <div class="ats-section-title">TENTANG SAYA</div>
+                            <p class="ats-text">{{ $summary }}</p>
+
+                            <div class="ats-section-title">PENGALAMAN</div>
+                            <div class="ats-text" style="white-space: pre-line;">{{ $experience }}</div>
+
+                            <div class="ats-section-title">PENDIDIKAN</div>
+                            <div class="ats-text" style="white-space: pre-line;">{{ $education }}</div>
+
+                            <div class="ats-section-title">KETERAMPILAN</div>
+                            <ul class="ats-skills-list">
+                                @if($skills)
+                                    @foreach(array_map('trim', explode(',', $skills)) as $sk)
+                                        @if($sk)
+                                            <li>{{ $sk }}</li>
                                         @endif
                                     @endforeach
+                                @else
+                                    <li>Keterampilan 1</li>
+                                    <li>Keterampilan 2</li>
+                                @endif
+                            </ul>
+
+                            <!-- Mini Footer QR Portofolio (ATS Style) -->
+                            <div class="ats-footer">
+                                <div>
+                                    <div class="ats-footer-title">LINK PORTOFOLIO UTAMA</div>
+                                    <div class="ats-footer-url">{{ $portfolioUrl ?: 'https://fajarportfolio.veroku.com/' }}</div>
+                                    <div class="ats-footer-socials">
+                                        @if($socialLinkedin) <span>LinkedIn: {{ $socialLinkedin }}</span> @endif
+                                        @if($socialGithub) <span>GitHub: {{ $socialGithub }}</span> @endif
+                                    </div>
+                                </div>
+                                <div class="ats-qr-box">
+                                    <!-- Embedded QR Code Generator for CV ATS verification -->
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($portfolioUrl ?: 'https://fajarportfolio.veroku.com/') }}&color=000000" alt="QR Portofolio" class="ats-qr">
                                 </div>
                             </div>
                         </div>
+                    @else
+                        <!-- Creative Paper Preview (Modern 2-Column Visual design) -->
+                        <div class="cv-paper-preview cv-paper-creative theme-{{ $creativeTheme }}" id="printableCv">
+                            <!-- Left Sidebar Column -->
+                            <div class="creative-sidebar">
+                                <div class="creative-photo-container">
+                                    @if($photoUrl)
+                                        <img src="{{ $photoUrl }}" alt="Foto {{ $fullName }}" class="creative-photo">
+                                    @else
+                                        <div class="creative-photo-placeholder"><i class="fa-solid fa-user"></i></div>
+                                    @endif
+                                </div>
 
-                        <!-- Right Main Column -->
-                        <div class="creative-main">
-                            <div class="creative-header">
-                                <h1 class="creative-name">{{ $fullName ?: 'NAMA LENGKAP' }}</h1>
-                                <p class="creative-title-text">{{ $jobTitle ?: 'PROFESI / JUDUL KARIR' }}</p>
+                                <div class="creative-sidebar-section">
+                                    <h5>KONTAK</h5>
+                                    <div class="creative-contact-item"><i class="fa-solid fa-envelope"></i> {{ $email ?: 'email@domain.com' }}</div>
+                                    <div class="creative-contact-item"><i class="fa-solid fa-phone"></i> {{ $phone ?: '08123456789' }}</div>
+                                    <div class="creative-contact-item"><i class="fa-solid fa-location-dot"></i> {{ $address ?: 'Lokasi' }}</div>
+                                </div>
+
+                                @if($socialLinkedin || $socialGithub || $socialInstagram || $socialFacebook || $portfolioUrl)
+                                    <div class="creative-sidebar-section">
+                                        <h5>SOSIAL MEDIA</h5>
+                                        @if($socialLinkedin)<div class="creative-contact-item"><i class="fa-brands fa-linkedin"></i> {{ $socialLinkedin }}</div>@endif
+                                        @if($socialGithub)<div class="creative-contact-item"><i class="fa-brands fa-github"></i> {{ $socialGithub }}</div>@endif
+                                        @if($socialInstagram)<div class="creative-contact-item"><i class="fa-brands fa-instagram"></i> {{ $socialInstagram }}</div>@endif
+                                        @if($socialFacebook)<div class="creative-contact-item"><i class="fa-brands fa-facebook"></i> {{ $socialFacebook }}</div>@endif
+                                        @if($portfolioUrl)<div class="creative-contact-item"><i class="fa-solid fa-globe"></i> {{ $portfolioUrl }}</div>@endif
+                                    </div>
+                                @endif
+
+                                <div class="creative-sidebar-section">
+                                    <h5>KEAHLIAN</h5>
+                                    <div class="creative-skills-badges">
+                                        @foreach(array_map('trim', explode(',', $skills)) as $skillItem)
+                                            @if(!empty($skillItem))
+                                                <span class="creative-skill-badge">{{ $skillItem }}</span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="creative-section-title">PROFIL PROFESIONAL</div>
-                            <p class="creative-body-text">{{ $summary }}</p>
+                            <!-- Right Main Column -->
+                            <div class="creative-main">
+                                <div class="creative-header">
+                                    <h1 class="creative-name">{{ $fullName ?: 'NAMA LENGKAP' }}</h1>
+                                    <p class="creative-title-text">{{ $jobTitle ?: 'PROFESI / JUDUL KARIR' }}</p>
+                                </div>
 
-                            <div class="creative-section-title">PENGALAMAN KERJA</div>
-                            <div class="creative-body-text" style="white-space: pre-line;">{{ $experience }}</div>
+                                <div class="creative-section-title">PROFIL PROFESIONAL</div>
+                                <p class="creative-body-text">{{ $summary }}</p>
 
-                            <div class="creative-section-title">RIWAYAT PENDIDIKAN</div>
-                            <div class="creative-body-text" style="white-space: pre-line;">{{ $education }}</div>
+                                <div class="creative-section-title">PENGALAMAN KERJA</div>
+                                <div class="creative-body-text" style="white-space: pre-line;">{{ $experience }}</div>
+
+                                <div class="creative-section-title">RIWAYAT PENDIDIKAN</div>
+                                <div class="creative-body-text" style="white-space: pre-line;">{{ $education }}</div>
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
     @endif

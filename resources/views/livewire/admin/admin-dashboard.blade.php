@@ -1,8 +1,13 @@
-<div class="admin-dashboard-wrapper" style="padding: 6rem 2rem 4rem; min-height: 90vh;">
+<div class="admin-dashboard-wrapper" x-data="{ isSidebarOpen: false }" style="padding: 6rem 2rem 4rem; min-height: 90vh;">
+    <!-- Floating Admin Menu Toggle Button (Mobile only) -->
+    <button @click="isSidebarOpen = !isSidebarOpen" class="admin-sidebar-toggle-btn" style="display: none;">
+        <i class="fa-solid" :class="isSidebarOpen ? 'fa-xmark' : 'fa-bars'"></i> Menu Admin
+    </button>
+
     <div class="admin-layout" style="display: flex; gap: 2rem; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
         
         <!-- Sidebar Kiri Mengambang (Floating Sidebar) -->
-        <aside class="admin-sidebar glass-card" style="width: 280px; padding: 2rem; position: sticky; top: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2rem; z-index: 10;">
+        <aside class="admin-sidebar glass-card" :class="isSidebarOpen ? 'show-sidebar' : ''" style="width: 280px; padding: 2rem; position: sticky; top: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2rem; z-index: 10;">
             <div style="text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
                 <div class="gaming-badge-header" style="margin-bottom: 0.5rem; justify-content: center; display: inline-flex;">
                     <span class="pulse-dot"></span> SECURE ADMIN
@@ -14,17 +19,17 @@
             
             <nav class="admin-nav" style="display: flex; flex-direction: column; gap: 0.8rem;">
                 <button class="admin-sidebar-tab-btn {{ $activeTab === 'orders' ? 'active' : '' }}" 
-                        wire:click="setTab('orders')"
+                        wire:click="setTab('orders')" @click="isSidebarOpen = false"
                         style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
                     <i class="fa-solid fa-list-check" style="font-size: 1.1rem; width: 20px;"></i> Pesanan Pelanggan
                 </button>
                 <button class="admin-sidebar-tab-btn {{ $activeTab === 'services' ? 'active' : '' }}" 
-                        wire:click="setTab('services')"
+                        wire:click="setTab('services')" @click="isSidebarOpen = false"
                         style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
                     <i class="fa-solid fa-laptop-code" style="font-size: 1.1rem; width: 20px;"></i> Layanan Jasa
                 </button>
                 <button class="admin-sidebar-tab-btn {{ $activeTab === 'games' ? 'active' : '' }}" 
-                        wire:click="setTab('games')"
+                        wire:click="setTab('games')" @click="isSidebarOpen = false"
                         style="display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 0.9rem 1.2rem; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-weight: 600; cursor: pointer; text-align: left;">
                     <i class="fa-solid fa-gamepad" style="font-size: 1.1rem; width: 20px;"></i> Game &amp; PPOB
                 </button>
@@ -156,7 +161,7 @@
                         </div>
                     @endif
 
-                    <form wire:submit.prevent="{{ $isEditingService ? 'updateService' : 'addService' }}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <form wire:submit.prevent="{{ $isEditingService ? 'updateService' : 'addService' }}" class="admin-form-grid">
                         <div class="form-group">
                             <label class="form-label">ID Slug Unik (e.g. <code>custom-saas</code>)</label>
                             <input type="text" class="form-input" wire:model="s_id" required placeholder="Slug huruf kecil & tanda hubung" {{ $isEditingService ? 'disabled' : '' }}>
@@ -178,7 +183,7 @@
                             @error('s_title') <span style="color: #e74c3c; font-size: 0.75rem;">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="form-group" style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.15);">
+                        <div class="form-group admin-form-row-group">
                             <div>
                                 <label class="form-label">Upload Gambar Baru (Custom)</label>
                                 <input type="file" class="form-input" wire:model="s_image_file" accept="image/*" style="padding: 0.4rem;">
@@ -229,7 +234,8 @@
                 <div class="glass-card" style="padding: 2rem;">
                     <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-layer-group text-cyan"></i> Daftar Layanan Aktif</h3>
                     
-                    <table class="admin-table">
+                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                        <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>Kategori</th>
@@ -264,6 +270,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
             </div>
@@ -271,7 +278,7 @@
 
         <!-- Tab 3: Games and Top-up packages -->
         @if($activeTab === 'games')
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="admin-two-col-grid">
                 
                 <!-- Add Game Form -->
                 <div class="glass-card" style="padding: 2rem; height: fit-content;">

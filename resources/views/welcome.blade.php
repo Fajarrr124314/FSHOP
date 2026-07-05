@@ -13,10 +13,10 @@
                     Mitra terpercaya untuk <strong>Jasa Pembuatan Web</strong>, <strong>Aplikasi Mobile</strong>, <strong>Landing Page</strong>, <strong>Portofolio Kreatif</strong>, <strong>Poster &amp; Banner</strong>, serta <strong>CV Gratis</strong> dengan performa ultra-ringan &amp; UI Glassmorphic futuristik.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#services" class="btn btn-primary">
+                    <a href="{{ route('services') }}" class="btn btn-primary">
                         Jelajahi Layanan <i class="fa-solid fa-arrow-right"></i>
                     </a>
-                    <a href="#cv-maker" class="btn btn-outline">
+                    <a href="{{ route('cv-maker') }}" class="btn btn-outline">
                         <i class="fa-solid fa-file-invoice"></i> Buat CV Gratis
                     </a>
                 </div>
